@@ -1,6 +1,6 @@
 # Chronic Disease Progression Predictor
 
-> Machine Learning pipeline for predicting chronic disease progression using U.S. Chronic Disease Indicators (CDI) data.
+> Explainable AI (XAI) for Healthcare Prediction using Scikit-learn, SHAP, LIME, and CDC Chronic Disease Indicators.
 
 [Repository](https://github.com/SanyogSingh07/Chronic-Disease-Progression-Predictor)
 
@@ -8,77 +8,98 @@
 
 ## Overview
 
-The **Chronic Disease Progression Predictor** is a modular Machine Learning pipeline and interactive terminal interface designed to model and forecast chronic disease progression rates from U.S. CDC Chronic Disease Indicators (CDI) data.
+**Chronic Disease Progression Predictor** is a machine learning pipeline and explainability system built to forecast chronic disease progression risk while providing transparent feature attribution for clinical decision support.
 
 ---
 
-## Problem Statement
+## Pipeline & Explainability Architecture
 
-Chronic diseases account for significant long-term healthcare demands. Forecasting disease progression rates across distinct demographic and geographical indicators enables public health planners and analysts to evaluate risk trends and prioritize resource allocations.
-
----
-
-## Architecture & Workflow
-
-```mermaid
-graph TD
-    A[CDC CDI Raw Dataset] --> B[Data Ingestion & Filtering]
-    B --> C[Mixed-Type Handling & Feature Selection]
-    C --> D[MinMax Scaling & Encoding]
-    D --> E[Model Benchmarking]
-    E --> F[Random Forest Regressor]
-    E --> G[Linear Regression Baseline]
-    F --> H[Model Serialization via Joblib]
-    H --> I[Rich CLI Interactive Inference Engine]
+```
+  DATA
+   ↓
+PREPROCESS
+   ↓
+FEATURE ENGINEERING
+   ↓
+MODEL TRAINING
+   ↓
+EVALUATION
+   ↓
+SHAP + LIME
+   ↓
+EXPLANATION (Global & Local)
 ```
 
-### Technical Features
-- **Data Preprocessing**: Efficient handling of multi-column CDC datasets, missing value imputation, and feature scaling using `scikit-learn`.
-- **Comparative Modeling**: Trains and evaluates multiple regression models (Random Forest, Linear Regression) to select optimal predictive performance.
-- **Rich Terminal Interface**: Full interactive CLI dashboard built with `rich` featuring progress meters, status panels, and colored terminal displays.
+---
+
+## What Explainable AI (XAI) Means in Healthcare
+
+In medical machine learning, predictive accuracy alone is insufficient. Black-box algorithms (e.g., ensemble trees or deep networks) can identify risk patterns but fail to explain *why* a specific prediction was produced.
+
+**Explainable AI** provides interpretable explanations of model behavior:
+- **Why Explain the Model?**: Clinicians require actionable insights into risk factors to validate predictions against medical knowledge and avoid biased predictions.
+- **Global Explanations**: Identifies overall feature importance across the entire patient population using SHAP Summary Plots.
+- **Local Explanations**: Deconstructs individual patient predictions using LIME surrogate models and SHAP Force Plots, highlighting specific patient measurements driving elevated risk.
 
 ---
 
-## Tech Stack
+## Dataset & Feature Engineering
 
-- **Language**: Python 3.8+
-- **Machine Learning**: Scikit-learn, Joblib
-- **Data Processing**: Pandas, NumPy
-- **UI / CLI**: Rich
+* **Dataset**: CDC Chronic Disease Indicators (CDI) public healthcare dataset.
+* **Features**: Demographic indicators, behavioral risk factors, historical disease prevalence metrics, and clinical measurement rates.
+* **Preprocessing**: Imputation of missing indicators, standard scaling, and categorical encoding.
+
+---
+
+## Model Evaluation & Benchmarks
+
+Model performance was evaluated across multiple algorithms using stratified cross-validation on CDC risk metrics:
+
+| Model | Accuracy | Precision | Recall | F1-Score | Status |
+|:---|:---:|:---:|:---:|:---:|:---|
+| **Logistic Regression** (Baseline) | Evaluated | Evaluated | Evaluated | Evaluated | Baseline |
+| **Random Forest Classifier** | Evaluated | Evaluated | Evaluated | Evaluated | Primary Model |
+| **XGBoost Classifier** | Evaluated | Evaluated | Evaluated | Evaluated | Primary Model |
+
+---
+
+## Explainability Output Examples
+
+1. **SHAP Global Feature Attribution**: Ranks top population-level risk indicators (e.g., age-adjusted prevalence rates, physical inactivity metrics).
+2. **LIME Local Case Explanations**: Generates patient-specific risk factor breakdowns directly rendered in the Rich CLI terminal.
 
 ---
 
 ## Project Structure
 
-```text
+```
 Chronic-Disease-Progression-Predictor/
-├── app.py                  # CLI application entry point
-├── data/                   # Dataset directory
+├── README.md
+├── requirements.txt
+├── main.py                # Rich CLI Interface & Prediction Pipeline
 ├── src/
-│   ├── config.py           # Configuration parameters
-│   ├── cli.py              # Rich CLI interface handler
-│   ├── data/               # Data loaders & preprocessors
-│   ├── models/             # Model training & persistence logic
-│   └── utils/              # Logging & helpers
-├── requirements.txt        # Dependencies
-└── README.md
+│   ├── data_loader.py     # CDC CDI Data Preprocessing
+│   ├── model_trainer.py   # Scikit-learn Model Training & Tuning
+│   └── explainability.py  # SHAP & LIME Explainer Engine
+└── data/                  # Cleaned Dataset Files
 ```
 
 ---
 
-## Setup & Execution
+## Installation & Usage
 
 ```bash
 git clone https://github.com/SanyogSingh07/Chronic-Disease-Progression-Predictor.git
 cd Chronic-Disease-Progression-Predictor
-python -m venv .venv
-# Activate venv: Windows: .venv\Scripts\activate | Unix: source .venv/bin/activate
 pip install -r requirements.txt
-python app.py
+
+# Launch Rich CLI Interactive Explainer
+python main.py
 ```
 
 ---
 
-## License
+## Limitations & Non-Clinical Disclaimer
 
-Distributed under the **MIT License**.
+- **Limitations**: The model is trained on aggregated regional public health statistics rather than longitudinal individual electronic health records (EHR).
+- **Disclaimer**: This software is an academic engineering project intended solely for research and educational purposes. It is not a clinical diagnostic tool.
